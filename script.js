@@ -12,6 +12,7 @@ canvas.height = HEIGHT;
 
 var objects = []; //lista de objetos
 var objectSelected = null;
+var flag = 0;
 
 function drawCanvas() {
 
@@ -137,6 +138,56 @@ function updateStroke(){
             drawCanvas();
         } catch (error) {
             alert(error);
+        }
+    }
+}
+
+function onClickMouse(event){
+    var x = event.offsetX;
+    var y = event.offsetY;
+    console.log("x coords: " + x + ", y coords: " + y);
+    var M = transformUsual(WIDTH, HEIGHT);
+    console.log("x coords: " + M + ", y coords: " + M);
+    var click_coords = [x, y, 1];
+    var usual_coords = multVec(M, click_coords);
+
+    objectSelected = null;
+    for (var i = 0; i < objects.length; i++) {
+        if (objects[i].tryIntersection(usual_coords)) {
+            objectSelected = objects[i];
+            updateDisplay(objectSelected);
+        }
+    }
+}
+
+function overClick(event) {
+    flag = 0;
+}
+
+function setToMoveObject() {
+    flag = 1;
+}
+
+document.addEventListener("dblclick", setToMoveObject);
+
+document.addEventListener("mousemove", moveObject);
+
+document.addEventListener("click", overClick);
+
+function moveObject(event) {
+    if (flag == 1) {
+        if (objectSelected != null) {
+            var x = event.offsetX;
+            var y = event.offsetY;
+
+            console.log(WIDTH);
+            var M = transformUsual(WIDTH, HEIGHT);
+            console.log(M);
+            var click_coords = [x, y, 1];
+
+            var pos = multVec(M, click_coords);
+            objectSelected.setTranslate(pos[0], pos[1]);
+            drawCanvas();
         }
     }
 }

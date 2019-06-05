@@ -1,7 +1,6 @@
 //predefined colors
 white = "#ffffff65"; //com transparencia
-black = "#000000";
-violeta = "#9400D3";
+black = "#000000"
 
 SEGMENTS_CIRCLE = 30;
 
@@ -12,7 +11,7 @@ function Box(center = [0, 0, 1], height = 50, width = 50) {
     this.T = identity(); //matriz 3x3 de translação 
     this.R = identity(); //matriz 3x3 de rotação
     this.S = identity(); //matriz 3x3 de escala
-    this.fill = white	; //cor de preenchimento -> aceita cor hex, ex.: this.fill = "#4592af"
+    this.fill = white; //cor de preenchimento -> aceita cor hex, ex.: this.fill = "#4592af"
     this.stroke = black; //cor da borda -> aceita cor hex, ex.: this.stroke = "#a34a28"
     this.name = "";
 }
@@ -33,9 +32,28 @@ Box.prototype.setRotate = function(theta) {
     this.R = rotate(theta);
 }
 
+Box.prototype.getRotate = function() {
+    return [this.R[0][2], this.R[1][2], 1];
+}
 
 Box.prototype.setScale = function(x, y) {
     this.S = scale(x, y);
+}
+
+Box.prototype.getScale = function(x, y) {
+    return [this.S[0][0], this.S[1][1], 1];
+}
+
+Box.prototype.get_inv_scale = function() {
+    return inv_scale(this.S);
+}
+
+Box.prototype.get_inv_rotate = function() {
+    return inv_rotate(this.R);
+}
+
+Box.prototype.get_inv_translate = function() {
+    return inv_translate(this.T);
 }
 
 Box.prototype.setFill = function(color){
@@ -44,6 +62,29 @@ Box.prototype.setFill = function(color){
 
 Box.prototype.setStroke = function(color){
     this.stroke = color;
+}
+
+Box.prototype.tryIntersection = function(coords) {
+    var inverse_scale = this.get_inv_scale();
+    var inverse_rotate = this.get_inv_rotate();
+    var inverse_translate = this.get_inv_translate();
+
+    var inverse_m = mult(mult(inverse_scale, inverse_rotate), inverse_translate);
+    var local_coords = multVec(inverse_m, coords);
+
+    var points = [];
+    points.push([this.center[0] + this.width / 2, this.center[1] + this.height / 2, 1]);
+    points.push([this.center[0] - this.width / 2, this.center[1] + this.height / 2, 1]);
+    points.push([this.center[0] - this.width / 2, this.center[1] - this.height / 2, 1]);
+    points.push([this.center[0] + this.width / 2, this.center[1] - this.height / 2, 1]);
+
+    if (local_coords[0] >= points[1][0] && local_coords[0] <= points[0][0]) {
+        if (local_coords[1] >= points[2][1] && local_coords[1] <= points[1][1]) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 Box.prototype.draw = function(canv = ctx) { //requer o contexto de desenho
@@ -107,9 +148,16 @@ Circle.prototype.setRotate = function(theta) {
     this.R = rotate(theta);
 }
 
+Circle.prototype.getRotate = function() {
+    return [this.R[0][0], this.R[0][1], 1];
+}
 
 Circle.prototype.setScale = function(x, y) {
     this.S = scale(x, y);
+}
+
+Circle.prototype.getScale = function() {
+    return [this.S[0][0], this.S[1][1], 1];
 }
 
 Circle.prototype.setRadius = function(r) {

@@ -6,11 +6,27 @@ function translate(x, y) { // dado dois pontos, x e y constroi a matriz homogene
     ]; //retorna matriz 3x3
 }
 
+function inv_translate(matriz) {
+    return [
+        [1, 0, -matriz[0][2]],
+        [0, 1, -matriz[1][2]],
+        [0, 0, 1]
+    ]; 
+}
+
 //TODO: dado dois pontos, x e y constroi a matriz homogenea de translação 3x3
 function scale(x, y) {
     return [
         [x, 0, 0],
         [0, y, 0],
+        [0, 0, 1]
+    ]; //retorna matriz 3x3
+}
+
+function inv_scale(matriz) {
+    return [
+        [1 / matriz[0][0], 0, 0],
+        [0, 1 / matriz[1][1], 0],
         [0, 0, 1]
     ]; //retorna matriz 3x3
 }
@@ -21,6 +37,14 @@ function rotate(theta) {
     return [
         [Math.cos(theta), -Math.sin(theta), 0],
         [Math.sin(theta), Math.cos(theta), 0],
+        [0, 0, 1]
+    ]; //retorna matriz 3x3
+}
+
+function inv_rotate(matriz) {
+    return [
+        [matriz[0][0], matriz[1][0], 0],
+        [matriz[0][1], matriz[1][1], 0],
         [0, 0, 1]
     ]; //retorna matriz 3x3
 }
@@ -36,6 +60,14 @@ function identity(v = 1) { // identidade
 function transformCanvas(Width, Height) {
     return [
         [1, 0, Width / 2.],
+        [0, -1, Height / 2.],
+        [0, 0, 1]
+    ];
+}
+
+function transformUsual(Width, Height) {
+    return [
+        [1, 0, -Width / 2.],
         [0, -1, Height / 2.],
         [0, 0, 1]
     ];

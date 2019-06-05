@@ -48,7 +48,7 @@
                             </tr>
                             <tr>
                                 <td><br>Scale:</td>
-                                <td style="white-space: nowrap;"><br>x=<input id="valx" width="20%" type="text" value="0" oninput="updateScale();"><br></br:>y=<input id="valy" width="20%" type="text" value="0" oninput="updateScale();"></td>
+                                <td style="white-space: nowrap;"><br>x=<input id="valx" width="20%" type="text" value="1" oninput="updateScale();"><br></br:>y=<input id="valy" width="20%" type="text" value="1" oninput="updateScale();"></td>
                             </tr>
                             <tr>
                                 <td><br>Fill color:</td>
@@ -70,7 +70,7 @@
         <div class="content-wrap">
             <div class="content">
                 <canvas id="canvas" style="display:block; width:100%;
-				height:100%;"></canvas>
+				height:100%;" onclick="onClickMouse(event)"></canvas>
                 <!-- Related demos -->
 
             </div>
